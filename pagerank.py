@@ -9,7 +9,7 @@ class Pagerank(object):
         self.links_file = links_file
         self.pages_file = pages_file
         self.jump = 15
-        self.limit = 1000
+        self.limit = 100000
         self.edge = sum(1 for line in open(links_file))
         self.vertex = sum(1 for line in open(pages_file))
         self.adjacency_list = {}
@@ -28,7 +28,7 @@ class Pagerank(object):
         current = random.choice(list(self.adjacency_list.keys()))
         for i in range(self.limit):
             rand = random.randint(0, (self.vertex-1))
-            if random.randint(0, 99) < self.jump:
+            if random.randint(0, 99) < self.jump or current not in self.adjacency_list.keys():
                 current = random.choice(list(self.adjacency_list.keys()))
             self.visited[int(current)] += 1
             current = random.choice(self.adjacency_list[current])
@@ -40,8 +40,8 @@ class Pagerank(object):
             raise Exception("無効な数値です。0~100の数値を入力してください")
 
         print("全体の{}%以上のスコアを獲得したページは".format(parcent))
-        for index, times in enumerate(self.visited):
-            if times >= self.limit*float(parcent)/100:
+        for index, visited in enumerate(self.visited):
+            if visited >= self.limit*float(parcent)/100:
                 print(linecache.getline(self.pages_file, index+1), end="")
 
     def output(self):
@@ -51,7 +51,7 @@ class Pagerank(object):
 
 
 if __name__ == '__main__':
-    pagerank = Pagerank("wikipedia_links/small_links.txt", "wikipedia_links/small_pages.txt")
+    pagerank = Pagerank("wikipedia_links/links.txt", "wikipedia_links/pages.txt")
     pagerank.read()
     pagerank.surf()
     pagerank.output()
