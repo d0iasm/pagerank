@@ -1,3 +1,4 @@
+import re
 import random
 import linecache
 
@@ -30,13 +31,17 @@ class Pagerank(object):
                 current = random.choice(list(self.adjacency_list.keys()))
             self.visited[int(current)] += 1
             current = random.choice(self.adjacency_list[current])
-        print(self.visited)
 
     def rank(self, parcent):
+        if not re.compile("^\d+(\.\d+)?\Z").match(parcent):
+            raise Exception("無効な入力値です。0~100の数値を入力してください")
+        if float(parcent) < 0 or 100 < float(parcent):
+            raise Exception("無効な数値です。0~100の数値を入力してください")
+
         print("全体の{}%以上のスコアを獲得したページは".format(parcent))
         for index, value in enumerate(self.visited):
             if value >= self.limit*float(parcent)/100:
-                print(linecache.getline(self.pages_file, index+1))
+                print(linecache.getline(self.pages_file, index+1), end="")
 
 
 if __name__ == '__main__':
