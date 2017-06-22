@@ -1,4 +1,5 @@
 import re
+import codecs
 import random
 import linecache
 
@@ -15,8 +16,8 @@ class Pagerank(object):
         self.visited = [0]*self.vertex
 
     def read(self):
-        with open(self.links_file, "r") as file:
-            for line in file:
+        with open(self.links_file, "r") as f:
+            for line in f:
                 items = line[:-1].split()
                 if items[0] in self.adjacency_list:
                     self.adjacency_list[items[0]].append(items[1])
@@ -39,13 +40,20 @@ class Pagerank(object):
             raise Exception("無効な数値です。0~100の数値を入力してください")
 
         print("全体の{}%以上のスコアを獲得したページは".format(parcent))
-        for index, value in enumerate(self.visited):
-            if value >= self.limit*float(parcent)/100:
+        for index, times in enumerate(self.visited):
+            if times >= self.limit*float(parcent)/100:
                 print(linecache.getline(self.pages_file, index+1), end="")
+
+    def output(self):
+        with codecs.open("dest.txt", "w", "utf-8") as f:
+            for index, times in enumerate(self.visited):
+                f.write("%s %s\n" %(index, times))
 
 
 if __name__ == '__main__':
     pagerank = Pagerank("wikipedia_links/small_links.txt", "wikipedia_links/small_pages.txt")
     pagerank.read()
     pagerank.surf()
-    pagerank.rank(input("ページランクスコア何%以上？ --> "))
+    pagerank.output()
+    while True:
+        pagerank.rank(input("ページランクスコア何%以上？ --> "))
