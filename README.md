@@ -5,6 +5,7 @@ Page rank with random surfer model.
 ```
 $ git clone https://github.com/d0iasm/pagerank.git
 $ cd pagerank
+add links.txt and pages.txt to wikipedia/
 $ python pagerank.py
 ```
 If you input pagerank score, pages with a higher score is displayed.
