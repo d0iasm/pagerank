@@ -1,10 +1,9 @@
 import random
+import linecache
 
 
 class Pagerank(object):
     def __init__(self, links_file, pages_file):
-        # self.vertex = 1483277
-        # self.edge = 52973671
         self.links_file = links_file
         self.pages_file = pages_file
         self.jump = 15
@@ -33,11 +32,15 @@ class Pagerank(object):
             current = random.choice(self.adjacency_list[current])
         print(self.visited)
 
-    def rank(self):
-        pass
+    def rank(self, parcent):
+        print("全体の{}%以上のスコアを獲得したページは".format(parcent))
+        for index, value in enumerate(self.visited):
+            if value >= self.limit*float(parcent)/100:
+                print(linecache.getline(self.pages_file, index+1))
 
 
 if __name__ == '__main__':
     pagerank = Pagerank("wikipedia_links/small_links.txt", "wikipedia_links/small_pages.txt")
     pagerank.read()
     pagerank.surf()
+    pagerank.rank(input("ページランクスコア何%以上？ --> "))
