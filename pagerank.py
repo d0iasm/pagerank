@@ -9,7 +9,7 @@ class Pagerank(object):
         self.links_file = links_file
         self.pages_file = pages_file
         self.jump = 15
-        self.limit = 100000
+        self.limit = 1
         self.edge = sum(1 for line in open(links_file))
         self.vertex = sum(1 for line in open(pages_file))
         self.adjacency_list = {}
@@ -27,8 +27,8 @@ class Pagerank(object):
     def surf(self):
         current = random.choice(list(self.adjacency_list.keys()))
         for i in range(self.limit):
-            rand = random.randint(0, (self.vertex-1))
-            if random.randint(0, 99) < self.jump or current not in self.adjacency_list.keys():
+            if (random.randint(0, 99) < self.jump) \
+                    or (current not in self.adjacency_list.keys()):
                 current = random.choice(list(self.adjacency_list.keys()))
             self.visited[int(current)] += 1
             current = random.choice(self.adjacency_list[current])
@@ -47,11 +47,12 @@ class Pagerank(object):
     def output(self):
         with codecs.open("dest.txt", "w", "utf-8") as f:
             for index, times in enumerate(self.visited):
-                f.write("%s %s\n" %(index, times))
+                f.write("%s %s\n" % (index, times))
 
 
 if __name__ == '__main__':
-    pagerank = Pagerank("wikipedia_links/links.txt", "wikipedia_links/pages.txt")
+    pagerank = Pagerank("wikipedia_links/small_links.txt",
+                        "wikipedia_links/small_pages.txt")
     pagerank.read()
     pagerank.surf()
     pagerank.output()
